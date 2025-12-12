@@ -1,0 +1,21 @@
+# Python build artifacts
+__pycache__/
+*.py[cod]
+dist/
+build/
+*.egg-info/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# IDE settings
+.vscode/
+.idea/
+.conda/
+
+# Dev
+examples/volviz.py
+
+# pixi environments
+.pixi/*
+!.pixi/config.toml
