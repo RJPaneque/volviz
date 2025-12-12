@@ -1,0 +1,15 @@
+[workspace]
+authors = ["RJPaneque <rpaneque@ucm.es>"]
+channels = ["conda-forge"]
+name = "volviz"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.13.*"
+numpy = "*"
+matplotlib = "*"
+ipykernel = "*"
+ipympl = ">=0.9.8,<0.10"
