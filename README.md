@@ -86,6 +86,34 @@ slicer.show()
 
   * [**demo.ipynb**](https://github.com/RJPaneque/volviz/blob/main/examples/demo.ipynb): A walkthrough showing multiple volumes and anisotropy handling.
 
+## ☁️ Running on Google Colab
+
+Google Colab requires a specific setup to render interactive widgets correctly.
+
+1.  **Install the package:**
+    ```python
+    !pip install volviz
+    ```
+
+2.  **Restart the Runtime:**
+    If you see a `ValueError: Key backend: 'module://ipympl.backend_nbagg' is not a valid value...`, go to **Runtime > Restart Session**.
+
+3.  **Enable Widgets & Run:**
+    You must enable the custom widget manager **before** importing the library:
+
+    ```python
+    from google.colab import output
+    output.enable_custom_widget_manager() # <--- REQUIRED for Colab
+
+    %matplotlib widget
+    import numpy as np
+    from volviz import VolumeSlicer
+
+    vol = np.random.rand(30, 30, 30)
+    slicer = VolumeSlicer(vol)
+    slicer.show()
+    ```
+
 ## 🛠 Troubleshooting
 
 **The plot is blank or not interactive:**
