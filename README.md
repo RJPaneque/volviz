@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![PyPI version](https://badge.fury.io/py/volviz.svg)](https://badge.fury.io/py/volviz)
 
 **VolViz** is a lightweight, interactive 3D volume slicer designed for Jupyter Notebooks. It allows researchers and developers to visualize 3D numpy arrays (such as MRI, CT scans, or scientific simulations) directly within their workflow without needing heavy external software.
 
@@ -16,6 +17,10 @@
 * **Fluid Performance:** Built on `ipympl` for smooth, GPU-accelerated 2D rendering.
 
 ## 📦 Installation
+
+```bash
+pip install volviz
+```
 
 ### From Source (Development)
 If you have cloned this repository, navigate to the root folder and run:
@@ -79,9 +84,7 @@ slicer.show()
 
 ## 📂 Examples
 
-Check out the [examples/](https://www.google.com/search?q=examples/) folder for a complete demonstration:
-
-  * [**demo.ipynb**](https://www.google.com/search?q=examples/demo.ipynb): A walkthrough showing multiple volumes and anisotropy handling.
+  * [**demo.ipynb**](https://github.com/RJPaneque/volviz/blob/main/examples/demo.ipynb): A walkthrough showing multiple volumes and anisotropy handling.
 
 ## 🛠 Troubleshooting
 
@@ -104,5 +107,3 @@ jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplot
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE` for more information.
-
-```
