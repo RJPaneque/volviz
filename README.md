@@ -1,4 +1,3 @@
-````markdown
 # VolViz 🧊
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -106,5 +105,4 @@ jupyter labextension install @jupyter-widgets/jupyterlab-manager jupyter-matplot
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-```
 ```
