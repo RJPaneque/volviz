@@ -17,19 +17,46 @@ class VolumeSlicer:
 
     Attributes:
         volumes (List[np.ndarray]): List of 3D numpy arrays (x, y, z).
-        spacing (np.ndarray): Physical voxel spacing (x, y, z).
+        spacing (List[float] | Tuple[float, float, float]): Physical voxel spacing (x, y, z) in mm.
         names (List[str]): Volume display names.
         cmaps (List[str]): Colormaps for each volume.
         figsize (Tuple[int, int]): Size of individual subplot figures.
+    
+    Example:
+        You have to enable the interactive backend:
+
+        ```
+        from volviz import VolumeSlicer
+        import numpy as np, matplotlib.pyplot as plt
+
+        # If using Google Colab, restart Runtime after running this cell once
+        from google.colab import output
+        output.enable_custom_widget_manager()
+
+        %matplotlib widget  # <--- THIS IS ALWAYS REQUIRED
+
+        # Synthetic volume (x, y, z)
+        vol = np.zeros((80, 100, 60), dtype=float)
+        x, y, z = np.indices(vol.shape)
+        center = np.array(vol.shape) / 2
+        radius = 25
+        vol[((x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2) < radius**2] = 150
+
+        # Create and show the slicer (anisotropic spacing example)
+        slicer = VolumeSlicer(volumes=vol, spacing=(1.0, 1.0, 2.0), names=['Phantom'], cmaps=['gray'])
+        slicer.show()
+        ```
+    For more information and usage instructions, visit the PyPI page:
+    https://pypi.org/project/volviz/
     """
 
     def __init__(
         self,
         volumes: Union[np.ndarray, List[np.ndarray]],
+        spacing: Union[Tuple[float, float, float], List[float]] = [1.0, 1.0, 1.0],
         names: Optional[List[str]] = None,
         cmaps: Optional[List[str]] = None,
         figsize: Tuple[int, int] = (4, 4),
-        spacing: Tuple[float, float, float] = (1.0, 1.0, 1.0)
     ):
         """
         Initialize the VolumeSlicer.
@@ -37,10 +64,10 @@ class VolumeSlicer:
         Args:
             volumes: A single 3D numpy array or a list of 3D arrays.
                      Shape convention: (x, y, z).
+            spacing: Voxel spacing in mm (x, y, z). Default is isotropic [1,1,1].
             names: Optional list of names for the volumes.
             cmaps: Optional list of colormaps (e.g., 'gray', 'bone').
             figsize: Figure size (width, height) in inches.
-            spacing: Voxel spacing in mm (x, y, z). Default is isotropic (1,1,1).
         """
         if isinstance(volumes, np.ndarray):
             self.vols = [volumes]
@@ -50,6 +77,8 @@ class VolumeSlicer:
         # Basic validation
         if not all(v.ndim == 3 for v in self.vols):
             raise ValueError("All input volumes must be 3D numpy arrays.")
+        if len(spacing) != 3:
+            raise ValueError("Spacing must be a tuple/list of three floats (x, y, z).")
 
         self.names = names if names else [f"Vol {i+1}" for i in range(len(self.vols))]
         self.cmaps = cmaps if cmaps else ['gray'] * len(self.vols)
@@ -169,17 +198,24 @@ class VolumeSlicer:
                         c, r = int(event.xdata + 0.5), int(event.ydata + 0.5)
                         ax_idx, slc = axis_dropdown.value, slice_slider.value
                         
-                        if ax_idx == 0:   x, y, z = slc, r, c
-                        elif ax_idx == 1: x, y, z = r, slc, c
-                        else:             x, y, z = r, c, slc
+                        if ax_idx == 0:   i, j, k = slc, r, c
+                        elif ax_idx == 1: i, j, k = r, slc, c
+                        else:             i, j, k = r, c, slc
 
-                        if (0 <= x < volume.shape[0] and 
-                            0 <= y < volume.shape[1] and 
-                            0 <= z < volume.shape[2]):
-                            val = volume[x, y, z]
+                        if (0 <= i < volume.shape[0] and 
+                            0 <= j < volume.shape[1] and 
+                            0 <= k < volume.shape[2]):
+                            val = volume[i, j, k]
                             v_str = f"{val:.2f}" if isinstance(val, (float, np.floating)) else f"{val}"
-                            label.value = (f"<div style='text-align:center; font-family:monospace; color:#333'>"
-                                           f"XYZ:({x},{y},{z}) | Val:{v_str}</div>")
+                            sx, sy, sz = self.spacing
+                            X, Y, Z = i * sx, j * sy, k * sz
+                            label.value = (
+                                "<div style='text-align:center; font-family:monospace; color:#333; "
+                                "margin-top:-34px; position:relative; background:rgba(255,255,255,0.0);'>"
+                                f"XYZ(mm):({X:.1f},{Y:.1f},{Z:.1f})<br>"
+                                f"IJK:({i},{j},{k}) | Val:{v_str}"
+                                "</div>"
+                            )
                         else:
                             label.value = "<div style='color:#ccc; text-align:center'>Out of bounds</div>"
                     except: pass
